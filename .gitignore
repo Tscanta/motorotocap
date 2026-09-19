@@ -1,27 +1,35 @@
+# Unity generated files
+**/[Ll]ibrary/
+**/[Tt]emp/
+**/[Oo]bj/
+**/[Bb]uild/
+**/[Bb]uilds/
+**/[Ll]ogs/
+**/[Uu]ser[Ss]ettings/
+**/[Mm]emoryCaptures/
+**/[Rr]ecordings/
+
+# Unity IDE / generated files
+**/.vs/
+**/.idea/
+*.csproj
+*.sln
+*.slnx
+*.user
+*.userprefs
+
 # Python
 .venv/
 __pycache__/
 *.pyc
-
-# IDE
-.vscode/
-.idea/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Python cache
 .pytest_cache/
 
-# Unity generated files
-unity/Library/
-unity/Temp/
-unity/Obj/
-unity/Build/
-unity/Builds/
-unity/Logs/
-unity/UserSettings/
-
-# Environment / secrets
+# OS / environment
+.DS_Store
+Thumbs.db
 .env
+
+# Unity model files
+*.task
+
+.vscode/
