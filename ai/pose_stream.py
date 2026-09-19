@@ -5,7 +5,7 @@ import cv2
 import mediapipe as mp
 import websockets
 
-from motion import calculate_angle
+from motion_processor import process_pose
 
 
 # ============================================================
@@ -96,108 +96,7 @@ async def capture_and_stream(websocket):
 
             landmarks = results.pose_landmarks[0]
 
-            # Important joints
-
-            left_shoulder = landmarks[11]
-            right_shoulder = landmarks[12]
-
-            left_elbow = landmarks[13]
-            right_elbow = landmarks[14]
-
-            left_wrist = landmarks[15]
-            right_wrist = landmarks[16]
-
-            left_hip = landmarks[23]
-            right_hip = landmarks[24]
-
-            left_knee = landmarks[25]
-            right_knee = landmarks[26]
-
-            left_ankle = landmarks[27]
-            right_ankle = landmarks[28]
-
-
-            # ------------------------------------------------
-            # Calculate elbow angles
-            # ------------------------------------------------
-
-            left_elbow_angle = calculate_angle(
-                [
-                    left_shoulder.x,
-                    left_shoulder.y,
-                    left_shoulder.z
-                ],
-                [
-                    left_elbow.x,
-                    left_elbow.y,
-                    left_elbow.z
-                ],
-                [
-                    left_wrist.x,
-                    left_wrist.y,
-                    left_wrist.z
-                ]
-            )
-
-            right_elbow_angle = calculate_angle(
-                [
-                    right_shoulder.x,
-                    right_shoulder.y,
-                    right_shoulder.z
-                ],
-                [
-                    right_elbow.x,
-                    right_elbow.y,
-                    right_elbow.z
-                ],
-                [
-                    right_wrist.x,
-                    right_wrist.y,
-                    right_wrist.z
-                ]
-            )
-
-
-            # ------------------------------------------------
-            # Calculate knee angles
-            # ------------------------------------------------
-
-            left_knee_angle = calculate_angle(
-                [
-                    left_hip.x,
-                    left_hip.y,
-                    left_hip.z
-                ],
-                [
-                    left_knee.x,
-                    left_knee.y,
-                    left_knee.z
-                ],
-                [
-                    left_ankle.x,
-                    left_ankle.y,
-                    left_ankle.z
-                ]
-            )
-
-            right_knee_angle = calculate_angle(
-                [
-                    right_hip.x,
-                    right_hip.y,
-                    right_hip.z
-                ],
-                [
-                    right_knee.x,
-                    right_knee.y,
-                    right_knee.z
-                ],
-                [
-                    right_ankle.x,
-                    right_ankle.y,
-                    right_ankle.z
-                ]
-            )
-
+            motion = process_pose(landmarks)
 
             # ------------------------------------------------
             # Build motion packet
@@ -208,19 +107,19 @@ async def capture_and_stream(websocket):
 
                 "pose": {
                     "left_elbow": round(
-                        float(left_elbow_angle), 2
+                        float(motion["left_elbow"]), 2
                     ),
 
                     "right_elbow": round(
-                        float(right_elbow_angle), 2
+                        float(motion["right_elbow"]), 2
                     ),
 
                     "left_knee": round(
-                        float(left_knee_angle), 2
+                        float(motion["left_knee"]), 2
                     ),
 
                     "right_knee": round(
-                        float(right_knee_angle), 2
+                        float(motion["right_knee"]), 2
                     )
                 }
             }
@@ -260,7 +159,7 @@ async def capture_and_stream(websocket):
 
             cv2.putText(
                 frame,
-                f"L Elbow: {left_elbow_angle:.1f}",
+                f"L Elbow: {motion['left_elbow']:.1f}",
                 (20, 40),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.7,
@@ -270,7 +169,7 @@ async def capture_and_stream(websocket):
 
             cv2.putText(
                 frame,
-                f"R Elbow: {right_elbow_angle:.1f}",
+                f"R Elbow: {motion['right_elbow']:.1f}",
                 (20, 70),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.7,
@@ -280,7 +179,7 @@ async def capture_and_stream(websocket):
 
             cv2.putText(
                 frame,
-                f"L Knee: {left_knee_angle:.1f}",
+                f"L Knee: {motion['left_knee']:.1f}",
                 (20, 100),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.7,
@@ -290,7 +189,7 @@ async def capture_and_stream(websocket):
 
             cv2.putText(
                 frame,
-                f"R Knee: {right_knee_angle:.1f}",
+                f"R Knee: {motion['right_knee']:.1f}",
                 (20, 130),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.7,
