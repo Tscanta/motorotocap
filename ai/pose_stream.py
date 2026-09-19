@@ -5,8 +5,8 @@ import cv2
 import mediapipe as mp
 import websockets
 
-from motion_processor import process_pose
-
+from smoothing import MotionSmoother
+from motion_processor import process_pose, extract_landmarks
 
 # ============================================================
 # Configuration
@@ -15,6 +15,7 @@ from motion_processor import process_pose
 WEBSOCKET_URI = "ws://localhost:8765"
 MODEL_PATH = "ai/pose_landmarker_full.task"
 
+smoother = MotionSmoother(alpha=0.35)
 
 # ============================================================
 # MediaPipe setup
@@ -96,32 +97,19 @@ async def capture_and_stream(websocket):
 
             landmarks = results.pose_landmarks[0]
 
-            motion = process_pose(landmarks)
+            raw_motion = process_pose(landmarks)
 
+            motion = smoother.smooth(raw_motion)
+
+            body_landmarks = extract_landmarks(landmarks)
             # ------------------------------------------------
             # Build motion packet
             # ------------------------------------------------
 
             motion_data = {
                 "timestamp": frame_timestamp,
-
-                "pose": {
-                    "left_elbow": round(
-                        float(motion["left_elbow"]), 2
-                    ),
-
-                    "right_elbow": round(
-                        float(motion["right_elbow"]), 2
-                    ),
-
-                    "left_knee": round(
-                        float(motion["left_knee"]), 2
-                    ),
-
-                    "right_knee": round(
-                        float(motion["right_knee"]), 2
-                    )
-                }
+                "pose": motion,
+                "landmarks": body_landmarks
             }
 
 

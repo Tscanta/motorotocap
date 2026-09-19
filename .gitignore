@@ -1,27 +1,89 @@
+# =========================
 # Python
+# =========================
 .venv/
+venv/
+env/
+
 __pycache__/
-*.pyc
-
-# IDE
-.vscode/
-.idea/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Python cache
+*.py[cod]
+*.pyd
 .pytest_cache/
 
-# Unity generated files
-unity/Library/
-unity/Temp/
-unity/Obj/
-unity/Build/
-unity/Builds/
-unity/Logs/
-unity/UserSettings/
+# Python tooling / coverage
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
 
+
+# =========================
+# MediaPipe / AI models
+# =========================
+# Large model files should be downloaded separately
+*.task
+
+
+# =========================
 # Environment / secrets
+# =========================
 .env
+.env.*
+!.env.example
+
+
+# =========================
+# IDE / Editor
+# =========================
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+
+# =========================
+# Unity generated files
+# =========================
+unity/**/Library/
+unity/**/Temp/
+unity/**/Obj/
+unity/**/Build/
+unity/**/Builds/
+unity/**/Logs/
+unity/**/UserSettings/
+unity/**/MemoryCaptures/
+unity/**/Recordings/
+
+
+# =========================
+# Unity generated project files
+# =========================
+unity/**/*.csproj
+unity/**/*.sln
+unity/**/*.suo
+unity/**/*.user
+unity/**/*.pidb
+unity/**/*.booproj
+unity/**/*.svd
+unity/**/*.pdb
+unity/**/*.mdb
+unity/**/*.opendb
+unity/**/*.VC.db
+
+
+# =========================
+# Logs / temporary files
+# =========================
+*.log
+*.tmp
+*.temp
