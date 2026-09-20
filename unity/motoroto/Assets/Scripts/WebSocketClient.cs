@@ -8,6 +8,8 @@ public class WebSocketClient : MonoBehaviour
 
     public MotionUI motionUI;
 
+    public CharacterMotionController characterController;
+
     async void Start()
     {
         Debug.Log("Starting MotionLens WebSocket client...");
@@ -47,6 +49,10 @@ public class WebSocketClient : MonoBehaviour
             {
                 motionUI.UpdateMotion(motion);
             }   
+            if (characterController != null)
+            {
+                characterController.UpdateMotion(motion);
+            }
         };
 
         await websocket.Connect();
