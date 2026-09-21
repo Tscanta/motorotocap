@@ -148,6 +148,10 @@ def extract_landmarks(landmarks):
 
     body_landmarks = {
 
+        "nose": landmark_to_dict(
+            landmarks[0]
+        ),
+
         # ====================================================
         # Upper body
         # ====================================================
